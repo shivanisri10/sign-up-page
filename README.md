@@ -18,8 +18,8 @@ It also allows deleting users from the dashboard.
 
 ## 📂 Project Structure
 signup-dashboard/
-│── index.html # Main application
-│── README.md # Project documentation
+---> index.html # Main application
+---> README.md # Project documentation
 
 ---
 
