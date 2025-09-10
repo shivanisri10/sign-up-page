@@ -128,8 +128,10 @@
     const form = document.getElementById("signupForm");
     const tableBody = document.querySelector("#userTable tbody");
 
+    // Load users from localStorage or start with empty array
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
+    // Render the table with current users
     function renderTable() {
       tableBody.innerHTML = "";
       users.forEach((user, index) => {
@@ -145,18 +147,22 @@
       });
     }
 
+    // Delete a user by index
     function deleteUser(index) {
       users.splice(index, 1);
       localStorage.setItem("users", JSON.stringify(users));
       renderTable();
     }
 
+    // Correct email validation function
     function isValidEmail(email) {
-      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+      email = (email || "").trim();
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
     }
 
+    // Simple password hashing (demo only, not secure)
     function hashPassword(password) {
-      // very simple hash for demo purposes
       let hashed = "";
       for (let i = 0; i < password.length; i++) {
         hashed += password.charCodeAt(i).toString(16);
@@ -164,6 +170,7 @@
       return hashed;
     }
 
+    // Handle form submission
     form.addEventListener("submit", function(event) {
       event.preventDefault();
 
@@ -171,6 +178,7 @@
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
+      // Reset error messages
       document.getElementById("usernameError").textContent = "";
       document.getElementById("emailError").textContent = "";
       document.getElementById("passwordError").textContent = "";
@@ -207,6 +215,7 @@
       renderTable();
     });
 
+    // Initial render
     renderTable();
   </script>
 </body>
