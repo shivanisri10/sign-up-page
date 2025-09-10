@@ -5,47 +5,61 @@
   <title>Signup & Dashboard</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f9f9f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background: white;
+      padding: 30px;
+      margin: 40px auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
     h2 {
+      text-align: center;
+      margin-bottom: 20px;
       color: #333;
     }
 
     form {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
     }
 
     label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
+      font-weight: 600;
+      margin-bottom: 5px;
     }
 
     input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
+      padding: 12px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 15px;
     }
 
     button {
-      margin-top: 15px;
-      padding: 10px 15px;
+      padding: 12px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       background: #4CAF50;
       color: white;
       font-weight: bold;
+      font-size: 16px;
       cursor: pointer;
+      transition: 0.3s ease;
     }
 
     button:hover {
@@ -55,22 +69,38 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 15px;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
+      padding: 14px;
+      border-bottom: 1px solid #eee;
       text-align: center;
     }
 
     th {
-      background: #f2f2f2;
+      background: #f7f7f7;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 14px;
+    }
+
+    tr:hover {
+      background: #fafafa;
     }
 
     .delete-btn {
       background: #e74c3c;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s ease;
     }
 
     .delete-btn:hover {
@@ -79,52 +109,62 @@
 
     .error {
       color: red;
-      margin-top: 5px;
-      font-size: 0.9em;
+      font-size: 0.85em;
+    }
+
+    .divider {
+      margin: 20px 0;
+      border-top: 2px solid #f0f0f0;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Signup Form</h2>
+    <form id="signupForm">
+      <div>
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter username">
+        <div id="usernameError" class="error"></div>
+      </div>
 
-  <h2>Signup Form</h2>
-  <form id="signupForm">
-    <label>Username</label>
-    <input type="text" id="username" placeholder="Enter username" required>
-    <div id="usernameError" class="error"></div>
+      <div>
+        <label>Email</label>
+        <input type="text" id="email" placeholder="Enter email">
+        <div id="emailError" class="error"></div>
+      </div>
 
-    <label>Email</label>
-    <input type="text" id="email" placeholder="Enter email" required>
-    <div id="emailError" class="error"></div>
+      <div>
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password">
+        <div id="passwordError" class="error"></div>
+      </div>
 
-    <label>Password</label>
-    <input type="password" id="password" placeholder="Enter password" required>
-    <div id="passwordError" class="error"></div>
+      <button type="submit">Signup</button>
+    </form>
 
-    <button type="submit">Signup</button>
-  </form>
+    <div class="divider"></div>
 
-  <h2>Dashboard</h2>
-  <table id="userTable">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Password (hashed)</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+    <h2>Dashboard</h2>
+    <table id="userTable">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Password (hashed)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <script>
-    // Get references
     const signupForm = document.getElementById("signupForm");
     const userTableBody = document.querySelector("#userTable tbody");
 
-    // Load saved users from localStorage
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    // Function to render table
     function renderTable() {
       userTableBody.innerHTML = "";
       users.forEach((user, index) => {
@@ -140,19 +180,16 @@
       });
     }
 
-    // Delete user function
     function deleteUser(index) {
       users.splice(index, 1);
       localStorage.setItem("users", JSON.stringify(users));
       renderTable();
     }
 
-    // Email validation regex
     function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
     }
 
-    // Simple hash (for demo only, not real security)
     function hashPassword(password) {
       let hashed = "";
       for (let i = 0; i < password.length; i++) {
@@ -161,23 +198,19 @@
       return hashed;
     }
 
-    // Form submit handler
     signupForm.addEventListener("submit", function(e) {
       e.preventDefault();
 
-      // Get values
       let username = document.getElementById("username").value.trim();
       let email = document.getElementById("email").value.trim();
       let password = document.getElementById("password").value;
 
-      // Reset errors
       document.getElementById("usernameError").textContent = "";
       document.getElementById("emailError").textContent = "";
       document.getElementById("passwordError").textContent = "";
 
       let isValid = true;
 
-      // Validation
       if (username === "") {
         document.getElementById("usernameError").textContent = "Username cannot be empty";
         isValid = false;
@@ -195,7 +228,6 @@
 
       if (!isValid) return;
 
-      // Save user
       const newUser = {
         username: username,
         email: email,
@@ -205,14 +237,10 @@
       users.push(newUser);
       localStorage.setItem("users", JSON.stringify(users));
 
-      // Clear form
       signupForm.reset();
-
-      // Update table
       renderTable();
     });
 
-    // Initial render
     renderTable();
   </script>
 </body>
